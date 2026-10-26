@@ -1,181 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Speed Controller — Project Demo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vehicle Speed Controller — Live Demo</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../demo.css">
 <style>
-  :root {
-    --bg: #07070a; --surface: #111117; --border: rgba(255,255,255,0.08);
-    --text: #f3f2ef; --text-dim: #9a9aa4; --text-faint: #64646d;
-    --accent: #ff4b2b; --accent-rgb: 255,75,43; --accent-2: #ffb020;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100svh; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); }
-  .brand { font-family: 'Anton', sans-serif; letter-spacing: .03em; font-size: 20px; }
-  .brand span { color: var(--accent); }
-  .back { font-size: 13px; font-weight: 700; color: var(--text-dim); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; }
-  .back:hover { color: var(--text); border-color: var(--accent); }
-  .badge { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; background: rgba(var(--accent-rgb),0.12); color: var(--accent); }
-
-  .wrap { max-width: 920px; margin: 0 auto; padding: 50px 24px 80px; }
-  .hero { text-align: center; margin-bottom: 40px; }
-  .hero h1 { font-family: 'Anton', sans-serif; font-size: clamp(28px,5vw,42px); margin: 14px 0 10px; }
-  .hero p { color: var(--text-dim); max-width: 56ch; margin: 0 auto; }
-
-  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 30px; }
-
-  .road-wrap { position: relative; height: 150px; border-radius: 12px; overflow: hidden; background: #14141a; margin-bottom: 26px; }
-  .road { position: absolute; inset: 0; }
-  .lane { position: absolute; top: 50%; left: 0; right: 0; height: 4px; margin-top: -2px;
-    background-image: repeating-linear-gradient(to right, #33333d 0 24px, transparent 24px 48px); }
-
-  .zone {
-    position: absolute; top: 0; bottom: 0; width: 26%; left: 62%;
-    background: linear-gradient(180deg, rgba(255,176,32,0.16), rgba(255,176,32,0.05));
-    border-left: 2px dashed rgba(255,176,32,.6);
-    border-right: 2px dashed rgba(255,176,32,.6);
-  }
-  .zone-label {
-    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-    font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
-    color: var(--accent-2); white-space: nowrap;
-  }
-  .rf-tower { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 22px; }
-
-  .car { position: absolute; bottom: 18px; left: -60px; font-size: 34px; transition: left linear; transform: scaleX(-1); }
-  .jcb {position :absolute; bottom:18x; left: -60px; font-size:34px; transition: left linear; Transform: scalex(-1); }
-
-  .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; margin-bottom: 26px; }
-  button.run {
-    padding: 13px 26px; border-radius: 100px; border: none; cursor: pointer;
-    background: linear-gradient(135deg,var(--accent),#ff7a3d); color: #0a0a0a; font-weight: 800; font-size: 14px;
-  }
-  button.run:disabled { opacity: .5; cursor: not-allowed; }
-
-  .gauges { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-  .gauge { background: #0c0c11; border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
-  .gauge b { display: block; font-family: 'Anton', sans-serif; font-size: 30px; }
-  .gauge span { font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .05em; }
-  #speedVal { color: var(--accent); }
-  #statusVal.safe { color: #6fdc8c; }
-  #statusVal.slow { color: var(--accent-2); }
-
-  .log { margin-top: 22px; font-size: 13px; color: var(--text-dim); min-height: 20px; text-align: center; }
-  .note { margin-top: 30px; font-size: 12.5px; color: var(--text-faint); text-align: center; }
-</style>
-</head>
+.road{position:relative;height:190px;border-radius:14px;overflow:hidden;background:#15151c;border:1px solid var(--border);margin-bottom:20px}
+.lane{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;background:repeating-linear-gradient(90deg,#f3f2ef 0 28px,transparent 28px 56px);opacity:.35}
+.zone{position:absolute;top:0;bottom:0;background:rgba(255,176,32,.14);border-left:2px dashed var(--accent-2);border-right:2px dashed var(--accent-2);display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2)}
+.tower{position:absolute;bottom:10px;font-size:22px;transform:translateX(-50%)}
+.car{position:absolute;top:50%;margin-top:-20px;font-size:34px;line-height:1;transform:translateX(-50%) scaleX(-1);transition:filter .3s}
+.car.slow{filter:drop-shadow(0 0 10px rgba(255,176,32,.9))}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.gauge{text-align:center}.gauge b{display:block;font-size:34px;font-weight:800;line-height:1.1}.gauge span{font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+.pill{display:inline-block;padding:4px 12px;border-radius:100px;font-size:13px;font-weight:800}
+.ok{background:rgba(80,200,120,.14);color:#6fdc94}.warn{background:rgba(255,176,32,.14);color:var(--accent-2)}.off{background:rgba(255,255,255,.06);color:var(--text-dim)}
+.pwm{height:10px;background:var(--bg-alt);border-radius:10px;overflow:hidden;margin-top:10px}.pwm i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .15s linear}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.ctl{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:var(--text-dim);min-width:200px}
+.ctl input[type=range]{accent-color:var(--accent);width:100%}
+.log{margin-top:20px;font-size:13px;color:var(--text-dim);min-height:22px}
+@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.road{height:160px}.zone{font-size:9.5px}}
+.gallery{margin-top:34px}.gallery h2{font-size:22px;margin-bottom:6px}.gallery .sub{color:var(--text-dim);font-size:14px;margin-bottom:18px}
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gal figure{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .35s var(--ease),border-color .3s}
+.gal figure:hover{transform:translateY(-5px);border-color:rgba(var(--accent-rgb),.5)}
+.gal figure.wide{grid-column:1/-1}
+.gal button{display:block;width:100%;cursor:zoom-in;background:var(--bg-alt)}
+.gal img{width:100%;height:100%;max-height:340px;object-fit:contain;display:block;transition:transform .5s var(--ease)}
+.gal figure:hover img{transform:scale(1.03)}
+.gal .wide img{max-height:480px}
+.gal figcaption{padding:14px 16px;font-size:13.5px;color:var(--text-dim)}.gal figcaption b{display:block;color:var(--text);font-size:14px;margin-bottom:2px}
+dialog{border:none;background:transparent;max-width:96vw;max-height:96vh;margin:auto}dialog::backdrop{background:rgba(4,4,6,.92)}
+dialog img{max-width:96vw;max-height:88vh;border-radius:8px;display:block;margin:0 auto}
+dialog p{text-align:center;color:var(--text);font-weight:700;margin-top:10px;font-size:14px}
+dialog .x{position:fixed;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--border);font-size:26px;line-height:1}
+@media(max-width:760px){.gal{grid-template-columns:1fr}}
+</style></head>
 <body>
+<div class="demo-top"><a class="demo-brand" href="../../index.html">NYK<i>.</i></a><a class="back" href="../../index.html#projects">← Back to portfolio</a></div>
+<main>
+  <span class="tag">Live Demo · Embedded Systems</span>
+  <h1>Vehicle Speed Controller on Highways</h1>
+  <p class="lead">An RF transmitter near a school or residential zone tells the vehicle's controller to cut the DC-motor speed. Drive the car through the zone and watch the speed drop automatically — then switch the RF link off to see the difference.</p>
 
-<div class="topbar">
-  <a href="../../index.html" class="brand">YASWANTH<span>.</span></a>
-  <a href="../../index.html#projects" class="back">← Back to portfolio</a>
-</div>
-
-<div class="wrap">
-  <div class="hero">
-    <span class="badge">Live Demo</span>
-    <h1>RF Vehicle Speed Controller</h1>
-    <p>A visual simulation of the hardware project: as the vehicle enters an RF-marked restricted zone (like a school area), its speed is automatically capped — then restored once it exits.</p>
+  <div class="road" id="road" aria-label="Road simulation">
+    <div class="lane"></div>
+    <div class="zone" id="zone"><span>School zone · RF range</span></div>
+    <div class="tower" id="tower" title="RF transmitter">📡</div>
+    <div class="car" id="car">🚗</div>
   </div>
 
-  <div class="panel">
-    <div class="road-wrap">
-      <div class="road">
-        <div class="lane"></div>
-        <div class="zone">
-          <span class="zone-label">Restricted Zone</span>
-          <span class="rf-tower">📡</span>
-        </div>
-        <div class="car" id="car">🚗</div>
-        <div class="jcb" id="jcb">🚗</div>
-      </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="grid" style="margin-bottom:0">
+      <div class="gauge"><b id="spd">0</b><span>Speed (km/h)</span></div>
+      <div class="gauge"><b id="pwmv">100%</b><span>Motor PWM duty</span></div>
+      <div class="gauge"><b><span class="pill off" id="rf">NO SIGNAL</span></b><span>RF receiver</span></div>
+      <div class="gauge"><b><span class="pill ok" id="mode">HIGHWAY</span></b><span>Mode</span></div>
     </div>
-
-    <div class="controls">
-      <button class="run" id="runBtn">▶ Start Simulation</button>
-    </div>
-
-    <div class="gauges">
-      <div class="gauge"><b id="speedVal">80</b><span>km/h</span></div>
-      <div class="gauge"><b id="statusVal" class="safe">Normal</b><span>Zone Status</span></div>
-      <div class="gauge"><b id="rfVal">Idle</b><span>RF Signal</span></div>
-    </div>
-
-    <p class="log" id="log">Press start to run the vehicle down the road.</p>
+    <div class="pwm" aria-hidden="true"><i id="pwmbar"></i></div>
   </div>
 
-  <p class="note">Front-end simulation only — no real Arduino/RF hardware is connected. In the physical build, an RF receiver on the vehicle picks up the zone's signal and a motor driver circuit throttles the DC motor accordingly.</p>
-</div>
+  <div class="card"><div class="controls">
+    <button class="btn primary" id="run">▶ Start Drive</button>
+    <button class="btn" id="reset">↺ Reset</button>
+    <button class="btn" id="rfToggle">RF link: ON</button>
+    <label class="ctl"><span>Highway speed: <b id="hv">80</b> km/h</span><input type="range" id="hs" min="40" max="120" value="80"></label>
+    <label class="ctl"><span>Zone limit: <b id="zv">30</b> km/h</span><input type="range" id="zs" min="10" max="60" value="30"></label>
+  </div>
+  <p class="log" id="log" role="status" aria-live="polite">Press “Start Drive” to begin.</p></div>
 
+  <section class="gallery"><span class="tag">Real Project Photos</span><h2>The actual hardware</h2><p class="sub">Photos of the working prototype from the project report. Tap a photo to enlarge it.</p>
+  <div class="gal">
+    <figure class="wide"><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/hardware-overview.jpg" data-cap="Hardware setup" aria-label="Enlarge: Hardware setup"><img src="../../assets/img/projects/vehicle-speed-controller/hardware-overview.jpg" alt="Hardware setup" loading="lazy"></button><figcaption><b>Hardware setup</b>Arduino UNO with HT12D decoder and RF receiver, motor driver with DC motor, 16x2 LCD, and the HT12E encoder + RF transmitter with speed-zone switches.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case1-vehicle-100kmh.jpg" data-cap="Case 1 — Free driving at 100 km/hr" aria-label="Enlarge: Case 1 — Free driving at 100 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case1-vehicle-100kmh.jpg" alt="Case 1 — Free driving at 100 km/hr" loading="lazy"></button><figcaption><b>Case 1 — Free driving at 100 km/hr</b>No zone signal: the LCD shows the vehicle’s current speed (100 km/hr, max speed).</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case4-encoder-80kmh.jpg" data-cap="Case 4 — Transmitter encoding 80 km/hr" aria-label="Enlarge: Case 4 — Transmitter encoding 80 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case4-encoder-80kmh.jpg" alt="Case 4 — Transmitter encoding 80 km/hr" loading="lazy"></button><figcaption><b>Case 4 — Transmitter encoding 80 km/hr</b>Switch D3 is high on the HT12E encoder, so the transmitter sends the 80 km/hr highway-zone code.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case4-reduced-80kmh.jpg" data-cap="Reduced to 80 km/hr" aria-label="Enlarge: Reduced to 80 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case4-reduced-80kmh.jpg" alt="Reduced to 80 km/hr" loading="lazy"></button><figcaption><b>Reduced to 80 km/hr</b>The receiver (HT12D) decodes the signal and the controller limits the vehicle from 100 to 80 km/hr.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case2-encoder-40kmh.jpg" data-cap="Case 2 — Transmitter encoding 40 km/hr" aria-label="Enlarge: Case 2 — Transmitter encoding 40 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case2-encoder-40kmh.jpg" alt="Case 2 — Transmitter encoding 40 km/hr" loading="lazy"></button><figcaption><b>Case 2 — Transmitter encoding 40 km/hr</b>Switch D1 is high, sending the residential-zone code.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case2-reduced-40kmh.jpg" data-cap="Reduced to 40 km/hr" aria-label="Enlarge: Reduced to 40 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case2-reduced-40kmh.jpg" alt="Reduced to 40 km/hr" loading="lazy"></button><figcaption><b>Reduced to 40 km/hr</b>Residential zone: speed controlled from 100 to 40 km/hr, LCD shows the speed limit.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case3-encoder-20kmh.jpg" data-cap="Case 3 — Transmitter encoding 20 km/hr" aria-label="Enlarge: Case 3 — Transmitter encoding 20 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case3-encoder-20kmh.jpg" alt="Case 3 — Transmitter encoding 20 km/hr" loading="lazy"></button><figcaption><b>Case 3 — Transmitter encoding 20 km/hr</b>Switch D0 is high, sending the school-zone code.</figcaption></figure>
+    <figure><button type="button" data-full="../../assets/img/projects/vehicle-speed-controller/case3-reduced-20kmh.jpg" data-cap="Reduced to 20 km/hr" aria-label="Enlarge: Reduced to 20 km/hr"><img src="../../assets/img/projects/vehicle-speed-controller/case3-reduced-20kmh.jpg" alt="Reduced to 20 km/hr" loading="lazy"></button><figcaption><b>Reduced to 20 km/hr</b>School zone: speed controlled from 100 to 20 km/hr.</figcaption></figure>
+  </div></section>
+  <dialog id="dlg"><button class="x" id="dx" aria-label="Close">&times;</button><img id="dimg" alt=""><p id="dcap"></p></dialog>
+
+  <p class="note">Interactive simulation of the project concept (Arduino reads the RF signal and lowers the PWM duty cycle driving the DC motor). It is a visual model, not live hardware data.</p>
+</main>
 <script>
-  const jcb = document.getElementById('jcb')
-  const car = document.getElementById('car');
-  const runBtn = document.getElementById('runBtn');
-  const speedVal = document.getElementById('speedVal');
-  const statusVal = document.getElementById('statusVal');
-  const rfVal = document.getElementById('rfVal');
-  const log = document.getElementById('log');
+const $=id=>document.getElementById(id);
+const ZONE={a:0.42,b:0.68};             // zone covers 42%–68% of the road
+const road=$('road'),car=$('car');
+let x=0,v=0,running=false,rfOn=true,last=0;
+$('zone').style.left=ZONE.a*100+'%';$('zone').style.width=(ZONE.b-ZONE.a)*100+'%';
+$('tower').style.left=((ZONE.a+ZONE.b)/2*100)+'%';
 
-  const ROAD_WIDTH = () => document.querySelector('.road-wrap').clientWidth;
-  const ZONE_START = 0.62, ZONE_END = 0.88; // matches .zone CSS position
-
-  let running = false;
-
-  function setSpeed(v) { speedVal.textContent = v; }
-  function setStatus(inZone) {
-    statusVal.textContent = inZone ? 'Slowed' : 'Normal';
-    statusVal.className = inZone ? 'slow' : 'safe';
-    rfVal.textContent = inZone ? 'Signal Locked' : 'Idle';
-  }
-
-  function runSim() {
-    if (running) return;
-    running = true;
-    runBtn.disabled = true;
-    runBtn.textContent = '● Running...';
-    log.textContent = 'Vehicle approaching at normal highway speed...';
-
-    const roadW = ROAD_WIDTH();
-    const totalDistance = roadW + 80;
-    const duration = 6000; // ms for the whole pass
-    car.style.transition = `left ${duration}ms linear`;
-    car.style.transition = `left ${duration}ms linear`;
-    setSpeed(70); setStatus(false);
-
-    requestAnimationFrame(() => { car.style.left = (totalDistance - 60) + 'px'; });
-    requestAnimationFrame(() => { car.style.left = (totalDistance - 60) + 'px'; });
-
-    const zoneEnterTime = duration * ZONE_START;
-    const zoneExitTime = duration * ZONE_END;
-
-    setTimeout(() => {
-      setSpeed(40); setStatus(true);
-      log.textContent = 'RF signal detected — speed automatically reduced to 30 km/h.';
-    }, zoneEnterTime);
-
-    setTimeout(() => {
-      setSpeed(70); setStatus(false);
-      log.textContent = 'Vehicle has exited the zone — normal speed restored.';
-    }, zoneExitTime);
-
-    setTimeout(() => {
-      running = false;
-      runBtn.disabled = false;
-      runBtn.textContent = '↻ Run Again';
-      car.style.transition = 'none';
-      car.style.left = '-60px';
-      car.style.transition = 'none';
-      car.style.left = '-60px';
-      setSpeed(80); setStatus(false);
-      log.textContent = 'Press start to run the vehicle down the road.';
-    }, duration + 400);
-  }
-
-  runBtn.addEventListener('click', runSim);
-</script>
-</body>
-</html>
+function logMsg(m){$('log').textContent=m}
+function frame(t){
+  if(!running){return}
+  const dt=Math.min((t-last)/1000,.05);last=t;
+  const inZone=x>=ZONE.a&&x<=ZONE.b, signal=rfOn&&inZone;
+  const hwy=+$('hs').value, lim=+$('zs').value;
+  const target=signal?lim:hwy;
+  v+=(target-v)*Math.min(1,dt*(signal?2.2:0.9));        // smooth braking / acceleration
+  x+=v/3.6*dt/280;                                      // visual scale: road ≈ 280 m
+  if(x>=1){running=false;x=1;draw(signal);logMsg('Reached the end of the road. Press Reset to run again.');$('run').textContent='▶ Start Drive';return}
+  draw(signal);requestAnimationFrame(frame);
+}
+function draw(signal){
+  const inZone=x>=ZONE.a&&x<=ZONE.b;
+  car.style.left=(x*100)+'%';car.classList.toggle('slow',signal);
+  $('spd').textContent=Math.round(v);
+  const duty=Math.round(v/Math.max(+$('hs').value,1)*100);
+  $('pwmv').textContent=Math.min(duty,100)+'%';$('pwmbar').style.width=Math.min(duty,100)+'%';
+  const rf=$('rf');rf.textContent=signal?'SIGNAL ✓':(inZone&&!rfOn?'LINK OFF':'NO SIGNAL');rf.className='pill '+(signal?'warn':'off');
+  const m=$('mode');m.textContent=signal?'ZONE · SLOW':'HIGHWAY';m.className='pill '+(signal?'warn':'ok');
+  if(running){logMsg(signal?'RF signal received → controller reduces PWM → vehicle slows to the zone limit.':inZone?'Inside the zone but the RF link is off — the car keeps highway speed!':'Cruising at highway speed.')}
+}
+function setSliders(){$('hv').textContent=$('hs').value;$('zv').textContent=$('zs').value}
+$('hs').oninput=$('zs').oninput=setSliders;
+$('run').onclick=()=>{
+  if(running){running=false;$('run').textContent='▶ Resume';logMsg('Paused.');return}
+  if(x>=1){x=0;v=0}
+  running=true;last=performance.now();$('run').textContent='⏸ Pause';requestAnimationFrame(frame);
+};
+$('reset').onclick=()=>{running=false;x=0;v=0;$('run').textContent='▶ Start Drive';draw(false);logMsg('Reset. Press “Start Drive” to begin.')};
+$('rfToggle').onclick=()=>{rfOn=!rfOn;$('rfToggle').textContent='RF link: '+(rfOn?'ON':'OFF')};
+setSliders();draw(false);
+const dlg=document.getElementById('dlg');
+document.querySelectorAll('.gal button').forEach(b=>b.onclick=()=>{document.getElementById('dimg').src=b.dataset.full;document.getElementById('dimg').alt=b.dataset.cap;document.getElementById('dcap').textContent=b.dataset.cap;dlg.showModal()});
+document.getElementById('dx').onclick=()=>dlg.close();dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
+</script></body></html>
