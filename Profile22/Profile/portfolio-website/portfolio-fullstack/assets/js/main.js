@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
   sections.forEach(sec => navObserver.observe(sec));
 
   /* ---------- 4. TYPED ROLE TEXT ---------- */
-  const roles = ['Python Developer', 'Full Stack Developer', 'Web Developer', 'Software Developer'];
+  const roles = [' Python Developer', ' Python Full Stack Developer', 'Web Developer', ];
   const typedEl = document.getElementById('typed');
   let roleIndex = 0, charIndex = 0, deleting = false;
 
